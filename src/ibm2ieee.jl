@@ -199,7 +199,7 @@ function ibm32ieee64(ibm::UInt32)::UInt64
     end
 
     # Reduce shift by 2 to get a binary exponent from the hex exponent. 
-    ibm_expt = Int((ibm & IBM32_EXPT) >> 22)
+    ibm_expt = UInt64((ibm & IBM32_EXPT) >> 22)
 
     # Normalise significand, then count leading zeros in top hex digit. 
     top_digit = ibm_frac & IBM32_TOP
@@ -220,6 +220,7 @@ function ibm32ieee64(ibm::UInt32)::UInt64
     # in incrementing the exponent by one. */
     ieee_expt = ibm_expt + 765 - leading_zeros
     ieee_frac = UInt64(ibm_frac) << (29 + leading_zeros)
+    ieee_frac = UInt64(ibm_frac) << (29)
     return ieee_sign + (UInt64(ieee_expt) << 52) + ieee_frac
 end
 
