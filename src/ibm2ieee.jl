@@ -52,14 +52,14 @@ function ibm32ieee32(ibm::UInt32)::UInt32
         ibm_expt -= 4
         top_digit = ibm_frac & IBM32_TOP
     end
-    leading_zeros = Int((BITCOUNT_MAGIC >> (top_digit >> 19)) & 0x3);
+    leading_zeros = Int32((BITCOUNT_MAGIC >> (top_digit >> 19)) & 0x3)
     ibm_frac <<= leading_zeros
 
     # Adjust exponents for the differing biases of the formats: the IBM bias
     # is 64 hex digits, or 256 bits. The IEEE bias is 127. The difference is
     # -129; we get an extra -1 from the different significand representations
     # (0.f for IBM versus 1.f for IEEE), and another -1 to compensate for an
-    # evil trick that saves an operation on the fast path: we don't remove the
+    # evil trick that saves an operation: on the fast path: we don't remove the
     # hidden 1-bit from the IEEE significand, so in the final addition that
     # extra bit ends in incrementing the exponent by one. */
     ieee_expt = ibm_expt - 131 - leading_zeros
@@ -181,22 +181,20 @@ end
 
 """
 IBM single-precision bit pattern to IEEE double-precision bit pattern.
+
+This is the simplest of the four cases: there's no need to check for
+overflow or underflow, no possibility of subnormal output, and never
+any rounding. 
+
 """
 
 
 function ibm32ieee64(ibm::UInt32)::UInt64
-    # This is the simplest of the four cases: there's no need to check for
-    # overflow or underflow, no possibility of subnormal output, and never
-    # any rounding. 
-    # int ibm_expt, ieee_expt, leading_zeros;
-    # npy_uint32 ibm_frac, top_digit;
-    # npy_uint64 ieee_sign, ieee_frac;
-
-    ieee_sign = UInt64((ibm & IBM32_SIGN) << 32)
+    ieee_sign = UInt64((ibm & IBM32_SIGN)) << 32
     ibm_frac = ibm & IBM32_FRAC
 
     # Quick return for zeros. 
-    if ibm_frac==0
+    if ibm_frac == 0
         return ieee_sign
     end
 
@@ -206,11 +204,12 @@ function ibm32ieee64(ibm::UInt32)::UInt64
     # Normalise significand, then count leading zeros in top hex digit. 
     top_digit = ibm_frac & IBM32_TOP
     while top_digit == 0
-        ibm_frac <<= 4;
-        ibm_expt -= 4;
+        ibm_frac <<= 4
+        ibm_expt -= 4
         top_digit = ibm_frac & IBM32_TOP
     end
     leading_zeros = Int32((BITCOUNT_MAGIC >> (top_digit >> 19)) & 0x3)
+    ibm_frac <<= leading_zeros
 
     # Adjust exponents for the differing biases of the formats: the IBM bias
     # is 64 hex digits, or 256 bits. The IEEE bias is 1023. The difference is
@@ -220,7 +219,7 @@ function ibm32ieee64(ibm::UInt32)::UInt64
     # from the IEEE significand, so in the final addition that extra bit ends
     # in incrementing the exponent by one. */
     ieee_expt = ibm_expt + 765 - leading_zeros
-    ieee_frac = UInt64(ibm_frac << (29 + leading_zeros))
+    ieee_frac = UInt64(ibm_frac) << (29 + leading_zeros)
     return ieee_sign + (UInt64(ieee_expt) << 52) + ieee_frac
 end
 
