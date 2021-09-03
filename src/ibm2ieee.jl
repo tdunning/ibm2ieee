@@ -67,7 +67,7 @@ function ibm32ieee32(ibm::UInt32)::UInt32
     if ieee_expt >= 0 && ieee_expt < IEEE32_MAXEXP
         # normal case; no shift needed 
         ieee_frac = ibm_frac;
-        return ieee_sign + ((npy_uint32)ieee_expt << 23) + ieee_frac;
+        return ieee_sign + (UInt32(ieee_expt) << 23) + ieee_frac;
     elseif ieee_expt >= IEEE32_MAXEXP
         # overflow 
         return ieee_sign + IEEE32_INFINITY;
@@ -210,7 +210,7 @@ function ibm32ieee64(ibm::UInt32)::UInt64
         ibm_expt -= 4;
         top_digit = ibm_frac & IBM32_TOP
     end
-    leading_zeros = (int)((BITCOUNT_MAGIC >> (top_digit >> 19)) & 0x3)
+    leading_zeros = Int32((BITCOUNT_MAGIC >> (top_digit >> 19)) & 0x3)
 
     # Adjust exponents for the differing biases of the formats: the IBM bias
     # is 64 hex digits, or 256 bits. The IEEE bias is 1023. The difference is
