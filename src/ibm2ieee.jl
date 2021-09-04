@@ -1,3 +1,5 @@
+module ibm2ieee
+
 const IBM32_SIGN = (UInt32(0x80000000))
 const IBM32_EXPT = (UInt32(0x7f000000))
 const IBM32_FRAC = (UInt32(0x00ffffff))
@@ -267,3 +269,5 @@ function ibm64ieee64(ibm::UInt64)::UInt64
     ieee_frac = ((ibm_frac >> 2) + round_up) >> 1
     return ieee_sign + (UInt64(ieee_expt) << 52) + ieee_frac;
 end
+
+end # module
