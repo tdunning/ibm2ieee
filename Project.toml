@@ -1,3 +1,6 @@
+name = "ibm2ieee"
+uuid = "b22d1561-6173-4d4d-abba-aa7f2b094f81"
+authors = ["Ted Dunning <ted.dunning@gmail.com>"]
+version = "0.1.0"
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
-Debugger = "31a5f54b-26ea-5ae9-a837-f05ce5417438"

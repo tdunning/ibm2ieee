@@ -1,15 +1,14 @@
-1	100 0010	0111 0110 1010 0000 0000 0000
-0xc276a000 => −118.625
-0x427B7333 => 123.45
-427B 7333 3333 3333 => 123.45  
-427B 7333 => 123.45  
-4280 0000 0000 0000 => 128.0
-4280 0000 => 123.45
-4280 8000 => 128.5
-0xC2808000 => -128.5
-4060 0000 => 0.375
-4060 0000 0000 0000 => 0.375
-0xBEC80000 => -0.0030517578
+Several tests here are based on several examples found on
+[Wikipedia](https://en.wikipedia.org/wiki/IBM_hexadecimal_floating-point)
+and in a book by Edward Bosworth to support his course on
+[IBM Assembler](http://www.edwardbosworth.com/My3121Textbook_HTM/MyText3121_Ch13_V02.htm)
 
+These tests were all verified using the Python package
+[from Enthought](https://github.com/enthought/ibm2ieee).
 
-https://www.crewes.org/Documents/ResearchReports/2017/CRR201725.pdf
+In addition 10,000 random 32-bit patterns were generated and converted
+using the Enthought library to both 32bit IEEE and 64bit IEEE form. 
+
+There are currently no tests for converting from IEEE form back to IBM
+floating point, nor are there tests for converting double precision
+floating point.
